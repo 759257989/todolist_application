@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://todo-backend-kwsu.onrender.com",
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5001/api"
 });
 
 // Add a request interceptor to include the token in headers
