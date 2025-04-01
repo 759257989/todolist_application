@@ -45,12 +45,12 @@ TODO_APP/
 
 
 
-## 🚀 Getting Started
+## 🚀 Getting Started Locally
 
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/759257989/todolist_application.git
-cd todo_app
+cd todolist_application
 ```
 ### 2. Set Up the Backend
 ```
@@ -58,7 +58,7 @@ cd backend
 npm install
 ```
 ### 3. Backend Environment Variables
-- Create a .env file inside backend with the following content of your actual secrets and database connection strings:
+- Create a .env file inside backend directory with the following content of your actual secrets and database connection strings:
 ```
 PORT=5001
 MONGO_URI=your_mongodb_connection_string
