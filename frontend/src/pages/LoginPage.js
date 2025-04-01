@@ -199,6 +199,24 @@ export default function LoginPage() {
             Sign up
           </button>
         </p>
+
+        <p className="mt-2 mb-0 text-center">
+          Forgot your password?{" "}
+          <button
+            className="link-opacity-100-hover btn btn-link p-0"
+            onClick={(e) => {
+              e.preventDefault();
+              if (pageRef.current) {
+                pageRef.current.classList.add("fade-out");
+              }
+              setTimeout(() => {
+                navigate("/reset-password");
+              }, 1000);
+            }}
+          >
+            Reset
+          </button>
+        </p>
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ import TasksPage from "./pages/TasksPage";
 // wrapper
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 import { useContext } from "react";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 // checks if user is authenticated
@@ -31,8 +32,9 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route
             path="/tasks"
-            element={<PrivateRoute>{<TasksPage /> }</PrivateRoute>}
+            element={<PrivateRoute>{<TasksPage />}</PrivateRoute>}
           />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
         </Routes>
       </Router>
     </AuthProvider>
