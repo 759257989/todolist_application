@@ -46,7 +46,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// Log In Existing User
+// Log In Existing User and return a JWT token
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   // Check if user exists

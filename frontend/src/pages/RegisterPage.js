@@ -3,17 +3,35 @@ import { useNavigate } from "react-router-dom";
 import "./RegisterPage.css";
 import api from "../api/axios";
 
+/**
+ * Handles user registration via a form. Includes input validation,
+ * API call to register the user, animated transitions, and error handling.
+ * @returns RegisterPage component
+ */
 export default function RegisterPage() {
+  // State to track form input values
   const [form, setForm] = useState({ username: "", email: "", password: "" });
+  // State for error and validation UI feedback
   const [error, setError] = useState(null);
   const [validated, setValidated] = useState(false);
   const [showError, setShowError] = useState(false);
   const navigate = useNavigate();
+  // Ref for fade-out transition animation
   const pageRef = useRef(null);
 
+  /**
+   * Updates form state when input fields change
+   * @param {*} e
+   * @returns
+   */
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  /**
+   * Handles form submission, Validates inputs, Sends registration request, Displays error on failure
+   * @param {*} e
+   * @returns
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formElement = e.target;
@@ -49,6 +67,7 @@ export default function RegisterPage() {
       ref={pageRef}
       className="register-page d-flex align-items-center justify-content-center vh-100"
     >
+      {/* Back button to homepage */}
       <button
         id="bottone1"
         className="d-flex align-items-center gap-2 position-absolute top-0 start-0 m-3"
@@ -75,6 +94,7 @@ export default function RegisterPage() {
         <span>Back to Home</span>
       </button>
 
+      {/* Registration form container */}
       <div className="text-center w-100" style={{ maxWidth: "400px" }}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -94,6 +114,7 @@ export default function RegisterPage() {
           Start building habits that move you forward.
         </p>
 
+        {/* Registration form card */}
         <div className="form-glass p-4 rounded shadow">
           <h4 className="text-center mb-3">Register</h4>
 
@@ -111,6 +132,7 @@ export default function RegisterPage() {
             className={validated ? "was-validated" : ""}
             onSubmit={handleSubmit}
           >
+            {/* Email field */}
             <div className="mb-3 text-start">
               <label htmlFor="email" className="form-label">
                 Email address
@@ -129,6 +151,7 @@ export default function RegisterPage() {
               </div>
             </div>
 
+            {/* Username field */}
             <div className="mb-3 text-start">
               <label htmlFor="username" className="form-label">
                 Username
@@ -145,6 +168,7 @@ export default function RegisterPage() {
               <div className="invalid-feedback">Username is required.</div>
             </div>
 
+            {/* Password field */}
             <div className="mb-3 text-start">
               <label htmlFor="password" className="form-label">
                 Password
@@ -160,12 +184,13 @@ export default function RegisterPage() {
               />
               <div className="invalid-feedback">Password is required.</div>
             </div>
-
+            {/* Submit button */}
             <button type="submit" className="btn-grad">
               Get Started!
             </button>
           </form>
 
+          {/* Navigation link to login page */}
           <p className="mt-3">
             Already have an account?{" "}
             <button

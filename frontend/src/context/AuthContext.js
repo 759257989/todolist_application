@@ -1,27 +1,44 @@
 import { createContext, useState, useEffect } from "react";
 
-// auth context object used to access and manage authentication state
+/**
+ * AuthContext provides access to authentication state and actions (login, logout).
+ * Components can consume this context to determine if a user is logged in,
+ * retrieve the token, or trigger login/logout.
+ */
 export const AuthContext = createContext();
 
+/**
+ * AuthProvider wraps around components that need access to authentication state.
+ * It manages the JWT token using React state and localStorage.
+ * @param {*} param0
+ * @returns
+ */
 export const AuthProvider = ({ children }) => {
   // token state to store JWT token
   const [token, setToken] = useState(localStorage.getItem("token") || null);
 
-  // save token to local storage after login
+  /**
+   * Stores the token in both localStorage and React state. Called when the user successfully logs in
+   * @param {*} newToken
+   */
   const login = (newToken) => {
     localStorage.setItem("token", newToken);
     setToken(newToken);
   };
 
-  // remove token from local storage after logout
+  /**
+   * Removes the token from localStorage and React state. Called when the user logs out.
+   */
   const logout = () => {
     localStorage.removeItem("token");
     setToken(null);
   };
-  // check if token is present
+  // Boolean indicating if the user is authenticated
   const isAuthenticated = !!token;
 
-  // shre token, login, logout and isAuthenticated state with all components wrapped in AuthProvider
+  /**
+   * Provides authentication state and actions to all children components.
+   */
   return (
     <AuthContext.Provider
       value={{
@@ -31,9 +48,8 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
       }}
     >
-        {/* placeholder */}
+      {/* placeholder */}
       {children}
     </AuthContext.Provider>
   );
-
 };

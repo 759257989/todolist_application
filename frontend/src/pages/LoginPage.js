@@ -4,18 +4,40 @@ import { AuthContext } from "../context/AuthContext";
 import api from "../api/axios";
 import "./LoginPage.css";
 
+/**
+ * Renders the login form with input validation, API integration, animated transitions,
+ * and context-based authentication handling.
+ * @returns LoginPage component
+ */
 export default function LoginPage() {
+  // State to track form input values
   const [form, setForm] = useState({ email: "", password: "" });
+  // Access login function from AuthContext
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+  // UI state for error display and form validation
   const [error, setError] = useState(null);
   const [validated, setValidated] = useState(false);
   const [showError, setShowError] = useState(false);
+  // Ref for triggering CSS page transition animations
   const pageRef = useRef(null);
 
+  /**
+   * Handles form input changes by updating local state
+   * @param {*} e
+   * @returns
+   */
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  /**
+   * Handles form submission
+   * Validates form, Sends login request to backend
+   * On success, stores token and navigates to /tasks with animation
+   * On failure, displays error message
+   * @param {*} e
+   * @returns
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -53,7 +75,7 @@ export default function LoginPage() {
       ref={pageRef}
       className="login-page d-flex align-items-center justify-content-center"
     >
-      {/* Back button */}
+      {/* Back to home button with animation */}
       <button
         id="bottone1"
         className="position-absolute top-0 start-0 m-3"
@@ -96,6 +118,7 @@ export default function LoginPage() {
         <h2 className="mb-2">Let’s get things done!</h2>
         <p className="text-muted mb-4">Small steps lead to big progress.</p>
 
+        {/* Login form card */}
         <div className="form-glass p-4 rounded">
           <h4 className="text-center mb-3">Login</h4>
 
@@ -115,6 +138,7 @@ export default function LoginPage() {
             className={validated ? "was-validated" : ""}
             onSubmit={handleSubmit}
           >
+            {/* Email input */}
             <div className="mb-3 text-start">
               <label htmlFor="email" className="form-label">
                 Email address
@@ -132,6 +156,7 @@ export default function LoginPage() {
               <div className="invalid-feedback">A valid email is required.</div>
             </div>
 
+            {/* Password input */}
             <div className="mb-3 text-start">
               <label htmlFor="password" className="form-label">
                 Password
@@ -149,6 +174,7 @@ export default function LoginPage() {
               <div className="invalid-feedback">Password is required.</div>
             </div>
 
+            {/* Submit button */}
             <button type="submit" className="btn-grad">
               Login
             </button>

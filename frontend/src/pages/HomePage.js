@@ -2,14 +2,26 @@ import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./HomePage.css";
 
+/**
+ * A welcoming landing page that introduces the app and allows users to navigate
+ * to the login or register pages with a fade-out animation effect.
+ * @returns HomePage component
+ */
 export default function HomePage() {
+  // Ref to the main page container, used for triggering CSS animations
   const pageRef = useRef(null);
+  // React Router hook to navigate between pages
   const navigate = useNavigate();
 
+  /**
+   * Triggers a fade-out animation before navigating to a different route
+   * @param {*} path The target route (e.g. '/login', '/register')
+   */
   const handleNavigateWithAnimation = (path) => {
     if (pageRef.current) {
       pageRef.current.classList.add("fade-out-fwd");
     }
+    // Navigate after animation duration
     setTimeout(() => {
       navigate(path);
     }, 700);
@@ -25,6 +37,7 @@ export default function HomePage() {
               Stay on top of your day. Organize your goals, tasks, and projects
               effortlessly.
             </p>
+            {/* Navigation Buttons */}
             <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
               <button
                 className="animated-btn"
@@ -71,6 +84,7 @@ export default function HomePage() {
               </button>
             </div>
           </div>
+          {/* Right Section: Image */}
           <div className="col-lg-6 col-12 text-center">
             <img
               src="/homepic.jpeg"
@@ -81,6 +95,7 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* Feature Highlights Section */}
         <div className="features-section row text-center shadow-sm rounded mx-1 mt-4 p-3 bg-white bg-opacity-75">
           <div className="col-md-4 mb-4">
             <i className="bi bi-calendar-date display-6"></i>
@@ -100,6 +115,7 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Footer */}
       <footer className="bg-dark text-light text-center py-3 mt-auto">
         © 2025 TaskMaster. All rights reserved.
       </footer>

@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
 
+/**
+ * Task Schema
+ * Represents a task belonging to a user. Each task includes a title,
+ * priority level, completion status, and timestamps for creation and updates.
+ */
 const TaskSchema = new mongoose.Schema(
   {
     userId: {

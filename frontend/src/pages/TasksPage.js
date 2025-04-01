@@ -5,8 +5,15 @@ import { AuthContext } from "../context/AuthContext";
 import { FaFlag, FaFlagCheckered } from "react-icons/fa";
 import "./TasksPage.css";
 
+/**
+ * This component renders the main task management UI.
+ * View, create, update, delete, and complete tasks
+ * Sort tasks by creation date or priority
+ *
+ * @returns TasksPage component
+ */
 export default function TasksPage() {
-  //local state declarations
+  // State for tasks and UI controls
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({ title: "", priority: "low" });
   const [sortBy, setSortBy] = useState("createdAt");
@@ -29,7 +36,11 @@ export default function TasksPage() {
     setTasks(res.data);
   };
 
-  // sort tasks based on selected criteria
+  /**
+   * Sorts tasks based on either priority or creation date
+   * @param {*} taskList Tasks to sort
+   * @returns Sorted task list
+   */
   const sortTasks = (taskList) => {
     return [...taskList].sort((a, b) => {
       if (sortBy === "priority") {
@@ -65,7 +76,11 @@ export default function TasksPage() {
     fetchTasks();
   };
 
-  // return priority icon based on level
+  /**
+   * Returns a styled icon based on the task's priority
+   * @param {*} priority Task priority ('low', 'medium', 'high')
+   * @returns
+   */
   const getPriorityIcon = (priority) => {
     switch (priority) {
       case "high":
