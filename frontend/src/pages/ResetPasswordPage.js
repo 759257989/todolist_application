@@ -19,12 +19,27 @@ export default function ResetPasswordPage() {
     e.preventDefault();
     const formElement = e.target;
 
-    if (!formElement.checkValidity() || form.password !== form.confirm) {
+    // Trigger native validation first
+    if (!formElement.checkValidity()) {
+      setValidated(true);
+      return;
+    }
+
+    // Custom password match check
+    if (form.password !== form.confirm) {
       setValidated(true);
       setError("Passwords do not match.");
       setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+        setTimeout(() => setError(null), 300);
+      }, 3000);
       return;
     }
+
+    // Everything valid
+    setValidated(false);
+    setError(null);
 
     try {
       await api.post("/forgot-password", {
@@ -35,6 +50,7 @@ export default function ResetPasswordPage() {
       if (pageRef.current) {
         pageRef.current.classList.add("fade-out");
       }
+
       setTimeout(() => {
         setSubmitted(true);
         navigate("/login");
@@ -53,7 +69,7 @@ export default function ResetPasswordPage() {
   return (
     <div
       ref={pageRef}
-      className="register-page d-flex align-items-center justify-content-center vh-100"
+      className="reset-page d-flex align-items-center justify-content-center vh-100"
     >
       {/* Back button to homepage */}
       <button
@@ -114,9 +130,10 @@ export default function ResetPasswordPage() {
 
           <form
             noValidate
-            className={validated ? "was-validated" : ""}
+            className={`needs-validation ${validated ? "was-validated" : ""}`}
             onSubmit={handleSubmit}
           >
+            {/* Email input */}
             <div className="mb-3 text-start">
               <label htmlFor="email" className="form-label">
                 Email address
@@ -131,9 +148,10 @@ export default function ResetPasswordPage() {
                 onChange={handleChange}
                 required
               />
-              <div className="invalid-feedback">Valid email is required.</div>
+              <div className="invalid-feedback">A valid email is required.</div>
             </div>
 
+            {/* New Password input */}
             <div className="mb-3 text-start">
               <label htmlFor="password" className="form-label">
                 New Password
@@ -151,6 +169,7 @@ export default function ResetPasswordPage() {
               <div className="invalid-feedback">New password is required.</div>
             </div>
 
+            {/* Confirm Password input */}
             <div className="mb-3 text-start">
               <label htmlFor="confirm" className="form-label">
                 Confirm Password
@@ -158,7 +177,11 @@ export default function ResetPasswordPage() {
               <input
                 name="confirm"
                 type="password"
-                className="form-control"
+                className={`form-control ${
+                  validated && form.confirm && form.password !== form.confirm
+                    ? "is-invalid"
+                    : ""
+                }`}
                 id="confirm"
                 placeholder="Confirm new password"
                 value={form.confirm}
@@ -166,20 +189,13 @@ export default function ResetPasswordPage() {
                 required
               />
               <div className="invalid-feedback">
-                Please confirm your password.
+                {form.confirm && form.password !== form.confirm
+                  ? "Passwords must match."
+                  : "Please confirm your password."}
               </div>
             </div>
 
-            <button
-              type="submit"
-              className="btn-grad"
-              disabled={
-                !form.email ||
-                !form.password ||
-                !form.confirm ||
-                form.password !== form.confirm
-              }
-            >
+            <button type="submit" className="btn-grad">
               Reset Password
             </button>
           </form>
