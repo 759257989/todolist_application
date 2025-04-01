@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import "./HomePage.css";
+import "./styles/HomePage.css"; // Importing CSS styles for the HomePage component
 
 /**
  * A welcoming landing page that introduces the app and allows users to navigate

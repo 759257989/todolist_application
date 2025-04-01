@@ -3,7 +3,7 @@ import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { FaFlag, FaFlagCheckered } from "react-icons/fa";
-import "./TasksPage.css";
+import "./styles/TasksPage.css";
 
 /**
  * This component renders the main task management UI.
@@ -20,20 +20,32 @@ export default function TasksPage() {
   const [showCompleted, setShowCompleted] = useState(true);
   const [editingTask, setEditingTask] = useState(null);
 
+  // state for Tags
+  const [tags, setTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [newTagName, setNewTagName] = useState("");
+
   // context and navigation utilities
   const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const pageRef = useRef(null);
 
-  // useEffect to fetch tasks when the component mounts
+  // useEffect to fetch tasks, tags when the component mounts
   useEffect(() => {
     fetchTasks();
+    fetchTags();
   }, []);
 
   // Fetch tasks from the backend
   const fetchTasks = async () => {
     const res = await api.get("/tasks");
     setTasks(res.data);
+  };
+
+  // Fetch tags from the backend
+  const fetchTags = async () => {
+    const res = await api.get("/tags");
+    setTags(res.data);
   };
 
   /**
@@ -55,7 +67,8 @@ export default function TasksPage() {
   const handleCreate = async (e) => {
     e.preventDefault();
     if (!newTask.title.trim()) return;
-    await api.post("/tasks", newTask);
+    //
+    await api.post("/tasks", { ...newTask, tags: selectedTags });
     setNewTask({ title: "", priority: "low" });
     fetchTasks();
   };
@@ -74,6 +87,17 @@ export default function TasksPage() {
   const toggleComplete = async (task) => {
     await api.put(`/tasks/${task._id}`, { completed: !task.completed });
     fetchTasks();
+  };
+
+  // tags related functions
+  const handleCreateTag = async (e) => {
+    e.preventDefault();
+    // Prevents sending empty or whitespace tags.
+    if (!newTagName.trim()) return;
+    const res = await api.post("/tags", { name: newTagName });
+    // Update the tags state with the new tag
+    setTags((prev) => [...prev, res.data]);
+    setNewTagName("");
   };
 
   /**
@@ -127,18 +151,29 @@ export default function TasksPage() {
           <input
             type="text"
             name="taskTitle"
-            className="neumorphic-input"
+            className="tag-input"
             placeholder="What do you want to accomplish?"
             value={newTask.title}
             onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+            style={{ width: "360px" }}
           />
         </div>
 
         <div className="task-form-actions mt-3 d-flex gap-2 align-items-center">
           {/* Priority selector */}
+          <label
+            htmlFor="priority-select"
+            className="form-label fw-semibold mb-1"
+          >
+            Priority
+          </label>
           <select
             className="form-select"
-            style={{ width: "150px", backgroundColor: "#daf3fa" }}
+            style={{
+              width: "170px",
+              backgroundColor: "#daf3fa",
+              color: "#969696",
+            }}
             value={newTask.priority}
             onChange={(e) =>
               setNewTask({ ...newTask, priority: e.target.value })
@@ -149,6 +184,34 @@ export default function TasksPage() {
             <option value="high">High Priority</option>
           </select>
 
+          <label htmlFor="tag-select" className="form-label fw-semibold mb-1">
+            Tag
+          </label>
+          {/* Tag selection */}
+          <select
+            className="form-select"
+            style={{
+              width: "200px",
+              backgroundColor: "#e0f7fa",
+              color: "#969696",
+            }}
+            value={selectedTags}
+            onChange={(e) =>
+              setSelectedTags(
+                Array.from(e.target.selectedOptions, (option) => option.value)
+              )
+            }
+          >
+            {tags.map((tag) => (
+              <option key={tag._id} value={tag._id}>
+                {tag.name}
+              </option>
+            ))}
+          </select>
+
+          <label htmlFor="tag-select" className="form-label fw-semibold mb-1">
+            Save Task
+          </label>
           {/* Add task button */}
           <button class="Btn">
             <div class="sign">
@@ -168,6 +231,40 @@ export default function TasksPage() {
             <div class="text">Add</div>
           </button>
         </div>
+      </form>
+
+      {/* Tag creation form */}
+      <form
+        onSubmit={handleCreateTag}
+        className="d-flex mt-3 gap-2 align-items-center"
+      >
+        <input
+          type="text"
+          value={newTagName}
+          onChange={(e) => setNewTagName(e.target.value)}
+          className="tag-input"
+          placeholder="Or name it something that resonates"
+          style={{ width: "360px" }}
+        />
+        <label htmlFor="tag-select" className="form-label fw-semibold mb-1">
+          Save Tag
+        </label>
+        <button type="submit" className="Btn">
+          <div className="sign">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-tags"
+              viewBox="0 0 16 16"
+            >
+              <path d="M3 2v4.586l7 7L14.586 9l-7-7zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586z" />
+              <path d="M5.5 5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m0 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1z" />
+            </svg>
+          </div>
+          <div className="text">Add</div>
+        </button>
       </form>
 
       <br />
@@ -191,7 +288,11 @@ export default function TasksPage() {
         <select
           id="sort"
           className="form-select"
-          style={{ width: "180px", backgroundColor: "#daf3fa" }}
+          style={{
+            width: "180px",
+            backgroundColor: "#daf3fa",
+            color: "#969696",
+          }}
           onChange={(e) => setSortBy(e.target.value)}
           value={sortBy}
         >
@@ -258,6 +359,12 @@ export default function TasksPage() {
                   <div className="flex-grow-1 d-flex flex-column align-items-center text-center">
                     {editingTask === task._id ? (
                       <div className="task-edit-form">
+                        <label
+                          htmlFor={`title-${task._id}`}
+                          className="form-label fw-semibold"
+                        >
+                          Title
+                        </label>
                         <input
                           value={task.title}
                           onChange={(e) =>
@@ -270,6 +377,12 @@ export default function TasksPage() {
                             )
                           }
                         />
+                        <label
+                          htmlFor={`priority-${task._id}`}
+                          className="form-label fw-semibold "
+                        >
+                          Priority
+                        </label>
                         <select
                           value={task.priority}
                           onChange={(e) =>
@@ -285,6 +398,36 @@ export default function TasksPage() {
                           <option value="low">Low</option>
                           <option value="medium">Medium</option>
                           <option value="high">High</option>
+                        </select>
+
+                        <label
+                          htmlFor={`tags-${task._id}`}
+                          className="form-label fw-semibold "
+                        >
+                          Tags
+                        </label>
+                        <select
+                          multiple
+                          value={task.tags}
+                          onChange={(e) => {
+                            const updatedTags = Array.from(
+                              e.target.selectedOptions,
+                              (o) => o.value
+                            );
+                            setTasks((prev) =>
+                              prev.map((t) =>
+                                t._id === task._id
+                                  ? { ...t, tags: updatedTags }
+                                  : t
+                              )
+                            );
+                          }}
+                        >
+                          {tags.map((tag) => (
+                            <option key={tag._id} value={tag._id}>
+                              {tag.name}
+                            </option>
+                          ))}
                         </select>
 
                         <div className="task-edit-buttons">
@@ -314,6 +457,35 @@ export default function TasksPage() {
                             {new Date(task.createdAt).toLocaleDateString()}
                           </small>
                         </div>
+
+                        {/* Show tags */}
+                        {task.tags && task.tags.length > 0 && (
+                          <div className="mt-2 d-flex flex-wrap justify-content-center">
+                            {task.tags.map((tagEntry) => {
+                              const tagId =
+                                typeof tagEntry === "string"
+                                  ? tagEntry
+                                  : tagEntry._id;
+                              const tag = tags.find((t) => t._id === tagId);
+                              return tag ? (
+                                <span
+                                  key={tag._id}
+                                  className="badge me-1"
+                                  style={{
+                                    color: "#969696",
+                                    backgroundColor: "#deecf0",
+                                    border: "1px solid #ccc",
+                                    borderRadius: "8px",
+                                    padding: "4px 8px",
+                                    fontSize: "0.75rem",
+                                  }}
+                                >
+                                  {tag.name}
+                                </span>
+                              ) : null;
+                            })}
+                          </div>
+                        )}
                       </>
                     )}
                   </div>
@@ -383,6 +555,23 @@ export default function TasksPage() {
                       </small>
                     </div>
                   </div>
+
+                  {/* Show tags */}
+                  {task.tags && task.tags.length > 0 && (
+                    <div className="mt-2">
+                      {task.tags.map((tagId) => {
+                        const tag = tags.find((t) => t._id === tagId);
+                        return tag ? (
+                          <span
+                            key={tag._id}
+                            className="badge bg-info text-dark me-1"
+                          >
+                            {tag.name}
+                          </span>
+                        ) : null;
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

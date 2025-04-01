@@ -19,8 +19,13 @@ const TaskSchema = new mongoose.Schema(
       enum: ["low", "medium", "high"],
       default: "low",
     },
+    tags: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Tag",
+      },
+    ],
   },
-//   include create and update time
   { timestamps: true }
 );
 

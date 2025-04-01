@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import "./RegisterPage.css";
+import "./styles/RegisterPage.css";
 import api from "../api/axios";
 
 /**

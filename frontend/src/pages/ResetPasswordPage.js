@@ -1,10 +1,19 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import "./ResetPasswordPage.css";
+import "./styles/ResetPasswordPage.css";
 import api from "../api/axios";
 
+/**
+ * Renders the ResetPasswordPage component
+ * Provides a form to reset the user's password using their email and new credentials
+ *
+ * @returns ResetPasswordPage component
+ */
 export default function ResetPasswordPage() {
+  // Form state
   const [form, setForm] = useState({ email: "", password: "", confirm: "" });
+
+  // UI feedback states
   const [error, setError] = useState(null);
   const [showError, setShowError] = useState(false);
   const [validated, setValidated] = useState(false);
@@ -12,20 +21,31 @@ export default function ResetPasswordPage() {
   const pageRef = useRef(null);
   const navigate = useNavigate();
 
+  /**
+   * Handles input changes and updates form state
+   * @param {*} e Input change event
+   * @returns
+   */
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  /**
+   * Handles form submission
+   * checks if passwords match, makes API request to reset password, and navigates to login on success
+   * @param {*} e Form submission event
+   * @returns
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formElement = e.target;
 
-    // Trigger native validation first
+    // Trigger validation first
     if (!formElement.checkValidity()) {
       setValidated(true);
       return;
     }
 
-    // Custom password match check
+    // check if passwords match
     if (form.password !== form.confirm) {
       setValidated(true);
       setError("Passwords do not match.");
@@ -42,6 +62,7 @@ export default function ResetPasswordPage() {
     setError(null);
 
     try {
+      // Make API request to reset password
       await api.post("/forgot-password", {
         email: form.email,
         newPassword: form.password,

@@ -1055,8 +1055,8 @@
   border-radius: 10px;
   border: none;
   font-size: 1rem;
-  box-shadow: inset 4px 4px 8px #cbd5e1, inset -4px -4px 8px #ffffff;
-  background: #f1f9fc;
+  box-shadow: inset 4px 4px 8px #798da5, inset -4px -4px 8px #e3dcdc;
+  background: #deecf0;
   transition: 0.3s ease;
 }
 
@@ -1064,7 +1064,7 @@
 .task-edit-form select:focus {
   outline: none;
   box-shadow: inset 6px 6px 12px #c5c5c5, inset -6px -6px 12px #ffffff;
-  background: #e7f7fb;
+  background: #deecf0;
 }
 
 .task-edit-buttons {
@@ -1100,4 +1100,23 @@
 
 .btn-cancel:hover {
   background-color: #4b5563;
+}
+
+/* tag create */
+.tag-input {
+  border: none;
+  outline: none;
+  border-radius: 15px;
+  padding: 1em;
+  background-color: #deecf0;
+  box-shadow: 10px 10px 30px #c5c5c5,
+  -10px -10px 30px #ffffff;
+  transition: 300ms ease-in-out;
+}
+
+.tag-input:focus {
+  background-color: #e8e8e8;
+  transform: scale(1.05);
+  box-shadow: 13px 13px 100px #969696,
+              -13px -13px 100px #ffffff;
 }
